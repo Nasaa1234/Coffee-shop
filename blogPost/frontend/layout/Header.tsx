@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import router from "next/router";
-import { Dropdown } from "react-bootstrap";
+import { Dropdown, Form } from "react-bootstrap";
 export const Header = () => {
   const [user, setUser] = useState<any>("");
   useEffect(() => {
@@ -23,6 +23,7 @@ export const Header = () => {
         />
       </Link>
       <div className="d-flex gap-4 align-items-center ">
+        <Form.Check type="switch" label="light" />
         <Link href="/">Home</Link>
         <Link href="/blog">Blog</Link>
         <Link href="/contact">Contact</Link>

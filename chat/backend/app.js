@@ -4,6 +4,8 @@ const app = express();
 const cors = require("cors");
 const userRouter = require("./routes/userRouter");
 const messageRouter = require("./routes/MessageRouter");
+const socket = require("socket.io");
+
 require("dotenv").config();
 
 app.use(cors());
@@ -21,6 +23,28 @@ connection.once("open", () => {
   console.log("mongoDB connection");
 });
 
-app.listen(4001, () => {
-  console.log("port listening in 4001");
+const server = app.listen(4002, () => {
+  console.log("port listening in 4002");
+});
+
+const io = socket(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    credentials: true,
+  },
+});
+
+global.onlineUsers = new Map();
+io.on("connection", (socket) => {
+  global.chatSocket = socket;
+  socket.on("add-user", (username) => {
+    onlineUsers.set(username, socket.id);
+  });
+
+  socket.on("send-msg", (data) => {
+    const sendUserSocket = onlineUsers.get(data.to);
+    if (sendUserSocket) {
+      socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+    }
+  });
 });

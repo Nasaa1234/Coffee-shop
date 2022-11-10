@@ -1,12 +1,22 @@
-import { Box, Paper, Stack } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 import { Container } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { User, ChatContainer } from "../components";
 import { useData } from "../providers/DataContext";
-
+import { io } from "socket.io-client";
+import { instance } from "../utils/axios";
 const Chat = () => {
-  const [currentUser, setCurrentUser] = useState();
-  const { data } = useData();
+  const [currentUser, setCurrentUser] = useState<any>();
+  const { data, user } = useData();
+  const socket = useRef<any>();
+
+  useEffect(() => {
+    if (currentUser) {
+      socket.current = io(instance);
+      socket.current.emit("add-user", currentUser._id);
+    }
+  }, [currentUser]);
+
   return (
     <Container>
       <Stack justifyContent={"center"}>
@@ -26,21 +36,23 @@ const Chat = () => {
             }}
           >
             <Stack gap={2}>
-              {data?.users?.map((user: any, ind: number) => {
+              {data?.users?.map((userOne: any, ind: number) => {
                 return (
-                  <Stack
-                    key={ind}
-                    onClick={() => {
-                      setCurrentUser(user);
-                    }}
-                  >
-                    <User
-                      username={user.username}
-                      picture={user.image}
-                      time="2 min"
-                      lastMessage="lorem ipsum dolor sit amet, consectetur adipiscing"
-                    />
-                  </Stack>
+                  userOne.username != user?.username && (
+                    <Stack
+                      key={ind}
+                      onClick={() => {
+                        setCurrentUser(userOne);
+                      }}
+                    >
+                      <User
+                        username={userOne.username}
+                        picture={userOne.image}
+                        time="2 min"
+                        lastMessage="lorem ipsum dolor sit amet, consectetur adipiscing"
+                      />
+                    </Stack>
+                  )
                 );
               })}
               <Stack
@@ -49,13 +61,13 @@ const Chat = () => {
                   bottom: 140,
                 }}
               >
-                nasaanasaa.070122@gmail.com
+                {user?.username}
               </Stack>
             </Stack>
           </Stack>
           <Stack width={"100%"}>
             {currentUser ? (
-              <ChatContainer currentUser={currentUser} />
+              <ChatContainer currentUser={currentUser} socket={socket} />
             ) : (
               "welcome to the chat"
             )}

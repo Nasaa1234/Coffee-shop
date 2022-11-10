@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const instance = axios.create({
-  baseURL: "http://localhost:8888",
+  baseURL: "https://backend-nasaa1234.vercel.app",
   headers: {
     Authorization:
       typeof window !== "undefined" ? localStorage.getItem("token") : null,

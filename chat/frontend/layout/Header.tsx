@@ -12,13 +12,10 @@ import {
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import router from "next/router";
+import { useData } from "../providers/DataContext";
 
 export const LeftBar = ({ children, authPage }: any) => {
-  const [user, setUser] = React.useState<any>("");
-  React.useEffect(() => {
-    setUser(localStorage.getItem("name"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [typeof window !== "undefined" ? localStorage.getItem("name") : null]);
+  const { user } = useData();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -61,7 +58,7 @@ export const LeftBar = ({ children, authPage }: any) => {
                     >
                       <AccountCircle />
                     </IconButton>
-                    <Typography>{user && user}</Typography>
+                    <Typography>{user && user.username}</Typography>
                   </Stack>
                   <Menu
                     id="menu-appbar"

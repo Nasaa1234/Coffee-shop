@@ -9,8 +9,6 @@ uploadRouter.post("/upload", async (req, res) => {
   const file = req.files.file;
   const uploadDir = __dirname + "/uploads/" + file.name;
 
-  console.log(uploadDir);
-
   file.mv(uploadDir, function (err) {
     if (err) res.status(400).send("Error");
 

@@ -75,6 +75,7 @@ export const DataProvider: FC<DataProviderProps> = ({ children }) => {
     instance
       .get(`posts?per_page=${pageNumber.per_page}&page=${pageNumber.page}`)
       .then((el) => {
+        console.log(el);
         setData(el.data);
       })
       .catch((err) => setError(err));

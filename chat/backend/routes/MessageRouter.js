@@ -30,19 +30,16 @@ messageRouter.post("/getMessage", async (req, res) => {
 
 messageRouter.post("/addMessage", async (req, res) => {
   try {
-    console.log(req.body);
     const { from, to, message } = req.body;
     const data = await Messages.create({
       message,
       users: [from, to],
       sender: from,
-      author: "636a0f094687a1681c8d8db4",
+      author: "636b849d719ae882816e9211",
     });
-    console.log(data);
-    if (data) return res.json({ message: "Message added successfully." });
-    else return res.json({ message: "Failed to add message to the database" });
+    if (data) res.send({ message: "Message added successfully." });
+    else res.send({ message: "Failed to add message to the database" });
   } catch (err) {
-    console.log("this is an error");
     res.send({
       err: err,
     });

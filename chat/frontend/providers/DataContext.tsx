@@ -6,14 +6,24 @@ import {
   FC,
   useEffect,
 } from "react";
-import { instance } from "../utils/axios";
+import {
+  allUsersRoute,
+  GetMessageRoute,
+  loginRoute,
+  registerRoute,
+  sendMessageRoute,
+} from "../utils/axios";
 import router from "next/router";
+import axios from "axios";
 
 interface DataContextInterface {
   data: any;
   setData: any;
-  AddUser: (email: string, password: string) => void;
-  Login: (email: any, password: any) => void;
+  user: any;
+  AddUser: (email: string, password: string, username: string) => void;
+  Login: (username: any, password: any) => void;
+  SendMessage: (from: string, to: string, message: string) => void;
+  succes: any;
 }
 
 const DataContext = createContext<DataContextInterface>(
@@ -24,11 +34,16 @@ interface DataProviderProps {
 }
 export const DataProvider: FC<DataProviderProps> = ({ children }) => {
   const [data, setData] = useState();
-  const AddUser = (email: string, password: string) => {
-    instance
-      .post("/users", {
+  const [user, setUser] = useState<any>();
+  const [succes, setSucces] = useState<any>({
+    send: "",
+  });
+  const AddUser = (email: string, password: string, username: string) => {
+    axios
+      .post(registerRoute, {
         email,
         password,
+        username,
       })
       .then((el) => {
         console.log(el);
@@ -36,26 +51,39 @@ export const DataProvider: FC<DataProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    instance.get(`users`).then((el) => {
+    axios.get(allUsersRoute).then((el) => {
       setData(el.data);
     });
   }, []);
-  const Login = (email: any, password: any) => {
-    console.log(email);
-    instance
-      .post("/login", {
-        email,
+  const Login = (username: any, password: any) => {
+    console.log(username);
+    axios
+      .post(loginRoute, {
+        username,
         password,
-      } as any)
+      })
       .then((el: any) => {
-        if (typeof window !== "undefined") {
-          localStorage.setItem("token", el?.data.token);
-          localStorage.setItem("name", el?.data.username);
-          router.push("/");
+        if (typeof window !== "undefined" && el.data) {
+          setUser(el.data.message);
+          router.push("/chat");
         }
       })
       .catch((el) => console.log(el));
   };
+
+  const SendMessage = (from: string, to: string, message: string) => {
+    axios
+      .post(sendMessageRoute, {
+        from,
+        to,
+        message,
+      })
+      .then((el: any) => {
+        setSucces({ send: el });
+      })
+      .catch((el) => console.log(el));
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -63,6 +91,9 @@ export const DataProvider: FC<DataProviderProps> = ({ children }) => {
         Login,
         data,
         setData,
+        user,
+        SendMessage,
+        succes,
       }}
     >
       {children}
