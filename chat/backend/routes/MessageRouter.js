@@ -33,9 +33,9 @@ messageRouter.post("/addMessage", async (req, res) => {
     const { from, to, message } = req.body;
     const data = await Messages.create({
       message,
-      users: [from, to],
-      sender: from,
-      author: "636b849d719ae882816e9211",
+      users: [from._id, to._id],
+      sender: from.username,
+      author: from._id,
     });
     if (data) res.send({ message: "Message added successfully." });
     else res.send({ message: "Failed to add message to the database" });

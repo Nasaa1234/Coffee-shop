@@ -56,7 +56,6 @@ export const DataProvider: FC<DataProviderProps> = ({ children }) => {
     });
   }, []);
   const Login = (username: any, password: any) => {
-    console.log(username);
     axios
       .post(loginRoute, {
         username,
@@ -71,7 +70,7 @@ export const DataProvider: FC<DataProviderProps> = ({ children }) => {
       .catch((el) => console.log(el));
   };
 
-  const SendMessage = (from: string, to: string, message: string) => {
+  const SendMessage = (from: any, to: any, message: string) => {
     axios
       .post(sendMessageRoute, {
         from,

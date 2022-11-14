@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @next/next/no-img-element */
+import React, { useEffect, useRef, useState } from "react";
 import { Box, IconButton, Stack, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import { useData } from "../providers/DataContext";
 import axios from "axios";
 import { GetMessageRoute } from "../utils/axios";
+import { Message } from "./Message";
 
 export const ChatContainer = ({
   currentUser,
@@ -16,19 +19,26 @@ export const ChatContainer = ({
   const [message, setMessage] = useState<any>();
   const [value, setValue] = useState<any>("");
   const [arrivalMessage, setArrivalMessage] = useState<any>(null);
-  const { _id } = currentUser;
-
   useEffect(() => {
     axios
       .post(GetMessageRoute, {
-        from: user._id,
-        to: _id,
+        from: user?._id,
+        to: currentUser._id,
       })
       .then((el: any) => {
         setMessage(el.data.messages);
-      })
-      .catch((el) => console.log(el));
-  }, [succes, user, _id]);
+      });
+  }, [succes, user, currentUser]);
+
+  const Send = () => {
+    socket.current.emit("send-msg", {
+      to: currentUser._id,
+      from: user._id,
+      value,
+    });
+    setValue("");
+    SendMessage(user, currentUser, value);
+  };
 
   useEffect(() => {
     if (socket.current) {
@@ -37,24 +47,11 @@ export const ChatContainer = ({
       });
     }
   }, []);
-  //nasaa ==> 636b849d719ae882816e9211
-  //admin ==> 636b9168719ae882816e9216
 
   useEffect(() => {
     arrivalMessage && setMessage((prev: any) => [...prev, arrivalMessage]);
   }, [arrivalMessage]);
 
-  const Send = () => {
-    socket.current.emit("send-msg", {
-      to: user._id,
-      from: _id,
-      msg: value,
-    });
-    SendMessage(user._id, _id, value);
-    const msgs = [...message];
-    msgs.push({ fromSelf: true, message: value });
-    setMessage(msgs);
-  };
   return (
     <Stack height="100%" alignItems={"center"} p={4}>
       <Stack alignItems={"center"} width="100%">
@@ -68,14 +65,20 @@ export const ChatContainer = ({
         sx={{
           overflow: "scroll",
         }}
+        width="100%"
+        flexDirection={"column"}
+        gap={1}
       >
         {message?.map((messageOne: any, ind: number) => {
-          console.log(messageOne.users, currentUser._id);
           return (
-            <Box key={ind}>
-              {messageOne.users?.includes(currentUser?._id) &&
-                messageOne.message}
-            </Box>
+            <Message
+              key={ind}
+              messageOne={messageOne}
+              ind={ind}
+              user={user}
+              message={message}
+              currentUser={currentUser}
+            />
           );
         })}
       </Stack>
@@ -84,6 +87,8 @@ export const ChatContainer = ({
           sx={{ width: 300 }}
           label="Send message.."
           variant="outlined"
+          placeholder="Send message.."
+          value={value}
           onChange={(e: any) => setValue(e.target.value)}
         />
         <IconButton onClick={Send}>

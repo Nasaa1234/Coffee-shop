@@ -9,6 +9,7 @@ const MessageSchema = new Schema(
       required: true,
     },
     users: Array,
+    sender: String,
     author: {
       type: Schema.ObjectId,
       ref: "Users",

@@ -11,6 +11,7 @@ export const User = (props: {
   return (
     <Stack
       flexDirection={"row"}
+      gap={2}
       sx={{
         border: "1px solid black",
         borderRadius: 5,

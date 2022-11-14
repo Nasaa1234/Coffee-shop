@@ -5,12 +5,13 @@ import { User, ChatContainer } from "../components";
 import { useData } from "../providers/DataContext";
 import { io } from "socket.io-client";
 import { instance } from "../utils/axios";
+
 const Chat = () => {
   const [currentUser, setCurrentUser] = useState<any>();
   const { data, user } = useData();
   const socket = useRef<any>();
-
   useEffect(() => {
+    console.log(currentUser);
     if (currentUser) {
       socket.current = io(instance);
       socket.current.emit("add-user", currentUser._id);
@@ -38,7 +39,7 @@ const Chat = () => {
             <Stack gap={2}>
               {data?.users?.map((userOne: any, ind: number) => {
                 return (
-                  userOne.username != user?.username && (
+                  userOne._id != user?._id && (
                     <Stack
                       key={ind}
                       onClick={() => {
@@ -69,7 +70,10 @@ const Chat = () => {
             {currentUser ? (
               <ChatContainer currentUser={currentUser} socket={socket} />
             ) : (
-              "welcome to the chat"
+              <Stack alignItems={"center"}>
+                <img src="https://raw.githubusercontent.com/koolkishan/chat-app-react-nodejs/master/public/src/assets/robot.gif" />
+                <h1>Welcome to Chat</h1>
+              </Stack>
             )}
           </Stack>
         </Paper>
