@@ -1,10 +1,12 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-export const Header = () => {
+const App = () => {
   return (
     <View>
-      <Text>Header</Text>
+      <Text>hi</Text>
     </View>
   );
 };
+
+export default App;
