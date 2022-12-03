@@ -1,12 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Stack} from '../styles/Stack';
 import {SaveIcon, ShareIcon} from '../assets/icon';
 
 export const Post = ({data}) => {
-  const date = new Date(data.publishDate);
+  const date = new Date(data?.publishDate);
 
   const normalizedDate = new Date(
     date.getTime() - date.getTimezoneOffset() * -60000,
@@ -20,33 +20,32 @@ export const Post = ({data}) => {
 
   const navigation = useNavigation();
   return (
-    <View style={styles.container}>
-      <View style={styles.body}>
-        <Text style={styles.title}>{data.text}</Text>
-        <View style={Stack.row}>
-          <Text
-            style={styles.yummy}
-            onPress={() => {
-              navigation.navigate('Detail', {
-                id: data.id,
-              });
-            }}>
-            {data.text}
-          </Text>
-        </View>
-        <View style={{...Stack.row, ...styles.space}}>
-          <View style={{...Stack.row, ...Stack.center}}>
-            <Text>{data?.owner.firstName}</Text>
-            <Text style={styles.dot} />
-            <Text>{formattedDate}</Text>
-          </View>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('Detail', {
+          id: data?._id,
+        });
+      }}>
+      <View style={styles.container}>
+        <View style={styles.body}>
+          <Text style={styles.title}>{data?.title}</Text>
           <View style={Stack.row}>
-            <ShareIcon />
-            <SaveIcon style={{marginLeft: 10}} />
+            <Text style={styles.yummy}>{data?.description}</Text>
+          </View>
+          <View style={{...Stack.row, ...styles.space}}>
+            <View style={{...Stack.row, ...Stack.center}}>
+              <Text>{data?.owner?.firstName}</Text>
+              <Text style={styles.dot} />
+              <Text>{formattedDate}</Text>
+            </View>
+            <View style={Stack.row}>
+              <ShareIcon />
+              <SaveIcon style={{marginLeft: 10}} />
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

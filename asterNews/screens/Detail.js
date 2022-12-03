@@ -40,9 +40,9 @@ export const Detail = ({route}) => {
 
   useEffect(() => {
     const getPostDetail = async () => {
-      console.log('id', id);
       const res = await instance.get(`/${id}`);
-      setData(res.data);
+      console.log(res.data);
+      setData(res.data.message);
     };
     getPostDetail();
   }, [id]);
@@ -60,14 +60,14 @@ export const Detail = ({route}) => {
   };
 
   const DeleteComment = index => {
-    setComment(comment.filter((c, ind) => ind !== index));
+    setComment(comment.filter((_, ind) => ind !== index));
   };
 
   return (
     <SafeAreaView style={styles.container}>
       {data ? (
         <ScrollView>
-          <Text style={styles.title}>{data?.text}</Text>
+          <Text style={styles.title}>{data?.title}</Text>
           <View style={Stack.row}>
             {data?.tags?.map((name, index) => {
               return (
@@ -163,6 +163,7 @@ export const Detail = ({route}) => {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 15,
+    marginVertical: 15,
   },
   input: {
     height: 40,

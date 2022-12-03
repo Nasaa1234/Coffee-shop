@@ -1,12 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
 import {Stack} from '../styles/Stack';
-import {Ionicons} from 'react-native-vector-icons/Ionicons';
 import {LogoIcon} from '../assets/icon';
 
 export const CustomDrawer = props => {
@@ -16,14 +15,13 @@ export const CustomDrawer = props => {
         <View
           style={{
             ...Stack.row,
-            marginLeft: 10,
+            marginLeft: 15,
             marginBottom: 30,
             alignItems: 'center',
           }}>
           <LogoIcon />
           <Text style={style.asterNews}>Aster News</Text>
         </View>
-
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
     </View>

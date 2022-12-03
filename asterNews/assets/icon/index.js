@@ -8,3 +8,5 @@ export * from './DislikeIcon';
 export * from './LikeIcon';
 export * from './MenuIcon';
 export * from './LogoIcon';
+export * from './SettingsIcon';
+export * from './AddIcon';

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -11,6 +11,7 @@ import {Post, Subscribe} from '../components';
 import {Footer} from '../layout';
 import {Stack} from '../styles/Stack';
 import {instance} from '../utils/axios';
+import LottieView from 'lottie-react-native';
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -19,13 +20,27 @@ export const Home = () => {
   useEffect(() => {
     const getData = async () => {
       const res = await instance.get('/');
-      setData(res.data.data);
+      console.log(res);
+      setData(res.data.message);
     };
     getData();
+  }, []);
+
+  const animationRef = useRef(null);
+
+  useEffect(() => {
+    animationRef.current?.play();
+    animationRef.current?.play(30, 120);
   }, []);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
+        <LottieView
+          ref={animationRef}
+          source={require('../animation/loading.json')}
+          autoPlay
+          loop={true}
+        />
         <Text style={styles.top}>Top Stories for you</Text>
         {data ? (
           <View>
@@ -40,7 +55,7 @@ export const Home = () => {
           </View>
         ) : (
           // eslint-disable-next-line react-native/no-inline-styles
-          <View style={{...Stack.center, height: '80%'}}>
+          <View style={{...Stack.center, height: 500}}>
             <ActivityIndicator size="large" />
           </View>
         )}
