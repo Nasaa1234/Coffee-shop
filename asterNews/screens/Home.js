@@ -1,12 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Post, Subscribe} from '../components';
 import {Footer} from '../layout';
 import {Stack} from '../styles/Stack';
@@ -35,12 +28,6 @@ export const Home = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <LottieView
-          ref={animationRef}
-          source={require('../animation/loading.json')}
-          autoPlay
-          loop={true}
-        />
         <Text style={styles.top}>Top Stories for you</Text>
         {data ? (
           <View>
@@ -56,7 +43,12 @@ export const Home = () => {
         ) : (
           // eslint-disable-next-line react-native/no-inline-styles
           <View style={{...Stack.center, height: 500}}>
-            <ActivityIndicator size="large" />
+            <LottieView
+              ref={animationRef}
+              source={require('../animation/loading.json')}
+              autoPlay
+              loop={true}
+            />
           </View>
         )}
       </ScrollView>

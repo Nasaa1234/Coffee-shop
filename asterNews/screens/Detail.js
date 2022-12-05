@@ -10,14 +10,17 @@ import {
   View,
   ActivityIndicator,
   SafeAreaView,
+  Dimensions,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Comment, Subscribe} from '../components';
 import {Footer} from '../layout';
 import {Stack} from '../styles/Stack';
 import {instance} from '../utils/axios';
+import Carousel from 'react-native-reanimated-carousel';
 
 export const Detail = ({route}) => {
+  const width = Dimensions.get('window').width;
   const [value, setValue] = useState();
   const [data, setData] = useState();
   const [seeComment, setSeeComment] = useState(true);
@@ -41,7 +44,6 @@ export const Detail = ({route}) => {
   useEffect(() => {
     const getPostDetail = async () => {
       const res = await instance.get(`/${id}`);
-      console.log(res.data);
       setData(res.data.message);
     };
     getPostDetail();
@@ -82,24 +84,44 @@ export const Detail = ({route}) => {
               );
             })}
           </View>
-          <Text style={styles.body}>{data?.yummy}</Text>
-          <Image
-            source={{
-              uri: 'https://images.theconversation.com/files/45159/original/rptgtpxd-1396254731.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=600&h=400&fit=crop&dpr=1%20600w,%20https://images.theconversation.com/files/45159/original/rptgtpxd-1396254731.jpg?ixlib=rb-1.1.0&q=30&auto=format&w=600&h=400&fit=crop&dpr=2%201200w,%20https://images.theconversation.com/files/45159/original/rptgtpxd-1396254731.jpg?ixlib=rb-1.1.0&q=15&auto=format&w=600&h=400&fit=crop&dpr=3%201800w,%20https://images.theconversation.com/files/45159/original/rptgtpxd-1396254731.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=754&h=502&fit=crop&dpr=1%20754w,%20https://images.theconversation.com/files/45159/original/rptgtpxd-1396254731.jpg?ixlib=rb-1.1.0&q=30&auto=format&w=754&h=502&fit=crop&dpr=2%201508w,%20https://images.theconversation.com/files/45159/original/rptgtpxd-1396254731.jpg?ixlib=rb-1.1.0&q=15&auto=format&w=754&h=502&fit=crop&dpr=3%202262w',
-            }}
-            style={{
-              width: 400,
-              height: 300,
-            }}
-          />
-          <View>
-            <Text style={styles.body}>{data?.description}</Text>
-          </View>
+          {data.image.length !== 1 ? (
+            <Carousel
+              loop
+              width={width}
+              height={width / 1.5}
+              autoPlay={true}
+              data={data.image}
+              scrollAnimationDuration={1000}
+              renderItem={({index}) => {
+                return (
+                  <Image
+                    source={{
+                      uri: data?.image[index],
+                    }}
+                    style={{
+                      width: width,
+                      height: width / 1.5,
+                    }}
+                  />
+                );
+              }}
+            />
+          ) : (
+            <Image
+              source={{
+                uri: data?.image,
+              }}
+              style={{
+                width: width,
+                height: width / 1.5,
+              }}
+            />
+          )}
+
+          <Text style={styles.body}>{data?.description}</Text>
           <View style={styles.written}>
-            <Text style={styles.published}>Published {data?.publishDate}</Text>
-            <Text>
-              by {data?.owner?.firstName} {data?.owner?.lastName}
-            </Text>
+            <Text style={styles.published}>Published {data?.published_at}</Text>
+            <Text>by Nasaa</Text>
             <Text
               style={styles.back}
               onPress={() => navigation.navigate('Home')}>
@@ -187,8 +209,7 @@ const styles = StyleSheet.create({
   },
   tag: {
     marginRight: 10,
-    width: 48,
-    height: 22,
+    padding: 4,
     backgroundColor: '#c7e1f1',
     justifyContent: 'center',
     alignItems: 'center',
@@ -237,6 +258,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     fontSize: 17,
     lineHeight: 28,
+    marginTop: 20,
   },
   footer: {
     marginVertical: 20,

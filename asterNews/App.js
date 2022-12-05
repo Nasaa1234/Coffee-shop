@@ -23,13 +23,13 @@ const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
-function NotificationsScreen({route}) {
+const NotificationsScreen = ({route}) => {
   return (
     <View>
       <Button title={route.name} />
     </View>
   );
-}
+};
 
 const HomeScreen = () => {
   return (
@@ -138,12 +138,13 @@ const BottomHome = () => {
 const App = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator screenOptions={{headerShown: false}}>
+      <Tab.Navigator>
         <Tab.Screen
           name="Home"
           component={BottomHome}
           options={{
             tabBarIcon: ({color}) => <HomeIcon stroke={color} />,
+            headerShown: false,
           }}
         />
         <Tab.Screen

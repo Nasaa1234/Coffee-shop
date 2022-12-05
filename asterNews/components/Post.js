@@ -1,12 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Stack} from '../styles/Stack';
 import {SaveIcon, ShareIcon} from '../assets/icon';
 
 export const Post = ({data}) => {
-  const date = new Date(data?.publishDate);
+  const date = new Date(data?.published_at);
 
   const normalizedDate = new Date(
     date.getTime() - date.getTimezoneOffset() * -60000,
@@ -28,13 +28,29 @@ export const Post = ({data}) => {
       }}>
       <View style={styles.container}>
         <View style={styles.body}>
-          <Text style={styles.title}>{data?.title}</Text>
           <View style={Stack.row}>
-            <Text style={styles.yummy}>{data?.description}</Text>
+            <View style={Stack.center}>
+              <Text style={styles.title}>{data?.title}</Text>
+              <Text style={styles.yummy}>
+                {data?.description.slice(0, 60)}...
+              </Text>
+            </View>
+            <View>
+              <Image
+                source={{
+                  uri: data?.image[0],
+                }}
+                style={{
+                  width: 80,
+                  height: 80,
+                  marginLeft: 25,
+                }}
+              />
+            </View>
           </View>
           <View style={{...Stack.row, ...styles.space}}>
             <View style={{...Stack.row, ...Stack.center}}>
-              <Text>{data?.owner?.firstName}</Text>
+              <Text>Nasaa</Text>
               <Text style={styles.dot} />
               <Text>{formattedDate}</Text>
             </View>
