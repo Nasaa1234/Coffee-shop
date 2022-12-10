@@ -10,3 +10,4 @@ export * from './MenuIcon';
 export * from './LogoIcon';
 export * from './SettingsIcon';
 export * from './AddIcon';
+export * from './UpIcon';

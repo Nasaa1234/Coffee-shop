@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {DeleteIcon, DislikeIcon, LikeIcon} from '../assets/icon';
 import {Stack} from '../styles/Stack';
 
@@ -35,12 +35,12 @@ export const Comment = ({data, DeleteComment, id}) => {
       <Text style={styles.text}>{data.text}</Text>
       <View style={{...Stack.row, ...Stack.spaceBetween, marginVertical: 5}}>
         <Text style={styles.written}>Posted on {data.posted_on}</Text>
-        <View style={{...Stack.row, ...Stack.center}}>
+        <TouchableOpacity
+          style={{...Stack.row, ...Stack.center}}
+          onPress={() => DeleteComment(id)}>
           <DeleteIcon />
-          <Text style={styles.delete} onPress={() => DeleteComment(id)}>
-            Delete
-          </Text>
-        </View>
+          <Text style={styles.delete}>Delete</Text>
+        </TouchableOpacity>
       </View>
       <Text style={{color: '#2F9FF8'}}>Reply</Text>
       {data.reply?.map((el, ind) => {

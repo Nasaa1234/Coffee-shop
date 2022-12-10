@@ -1,7 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {
-  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,59 +9,59 @@ import {
   View,
   ActivityIndicator,
   SafeAreaView,
-  Dimensions,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {Comment, Subscribe} from '../components';
+import {CarousalImage, Comment, Subscribe} from '../components';
 import {Footer} from '../layout';
 import {Stack} from '../styles/Stack';
 import {instance} from '../utils/axios';
-import Carousel from 'react-native-reanimated-carousel';
+import {UpIcon} from '../assets/icon';
+import {TapGestureHandler} from 'react-native-gesture-handler';
 
 export const Detail = ({route}) => {
-  const width = Dimensions.get('window').width;
+  const navigation = useNavigation();
   const [value, setValue] = useState();
   const [data, setData] = useState();
-  const [seeComment, setSeeComment] = useState(true);
-  const [comment, setComment] = useState([
-    {
-      text: 'hello',
-      user: 'John Wall',
-      posted_on: 'Jul 5, 2021 | 6:22 AM',
-      reply: [
-        {
-          text: 'Hi',
-          user: 'Nasanbat',
-          posted_on: 'Jul 5, 2021 | 7:22 AM',
-        },
-      ],
-    },
-  ]);
-  const {id} = route.params;
-  const navigation = useNavigation();
+  const [seeComment, setSeeComment] = useState({
+    add: false,
+    delete: false,
+  });
+  const [succes, setSucces] = useState();
+  const {id, date} = route.params;
 
   useEffect(() => {
     const getPostDetail = async () => {
-      const res = await instance.get(`/${id}`);
+      const res = await instance.get(`/post/${id}`);
       setData(res.data.message);
     };
     getPostDetail();
-  }, [id]);
+  }, [id, succes]);
 
   const getValue = e => {
     setValue(e);
   };
 
   const AddComment = text => {
-    if (!text) {
-      return;
-    }
-    setComment([...comment, {text}]);
-    setValue('');
+    instance
+      .put('/post/writeComment', {
+        comments: text,
+        postId: id,
+      })
+      .then(() => setSucces({...succes, add: !succes?.add}));
   };
 
   const DeleteComment = index => {
-    setComment(comment.filter((_, ind) => ind !== index));
+    instance
+      .delete('/post/deleteComment', {
+        commentId: index,
+        postId: id,
+      })
+      .then(() => setSucces({...succes, delete: !succes?.delete}));
+  };
+
+  const MorePost = arr => {
+    const shuffled = [...arr].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 5);
   };
 
   return (
@@ -84,43 +83,15 @@ export const Detail = ({route}) => {
               );
             })}
           </View>
-          {data.image.length !== 1 ? (
-            <Carousel
-              loop
-              width={width}
-              height={width / 1.5}
-              autoPlay={true}
-              data={data.image}
-              scrollAnimationDuration={1000}
-              renderItem={({index}) => {
-                return (
-                  <Image
-                    source={{
-                      uri: data?.image[index],
-                    }}
-                    style={{
-                      width: width,
-                      height: width / 1.5,
-                    }}
-                  />
-                );
-              }}
-            />
-          ) : (
-            <Image
-              source={{
-                uri: data?.image,
-              }}
-              style={{
-                width: width,
-                height: width / 1.5,
-              }}
-            />
-          )}
-
+          <TapGestureHandler
+            onActivated={() => {
+              console.log('Activated');
+            }}>
+            <CarousalImage data={data} />
+          </TapGestureHandler>
           <Text style={styles.body}>{data?.description}</Text>
           <View style={styles.written}>
-            <Text style={styles.published}>Published {data?.published_at}</Text>
+            <Text style={styles.published}>Published {date}</Text>
             <Text>by Nasaa</Text>
             <Text
               style={styles.back}
@@ -139,27 +110,34 @@ export const Detail = ({route}) => {
               placeholder="Enter your comment here.."
               onChangeText={e => getValue(e)}
             />
-            <TouchableOpacity
-              style={styles.appButtonContainer}
-              onPress={() => AddComment(value)}>
-              <Text style={styles.appButtonText}>Post Comment</Text>
+            <TouchableOpacity style={styles.appButtonContainer}>
+              <Text
+                style={styles.appButtonText}
+                onPress={() => AddComment(value)}>
+                Post Comment
+              </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.comments}>
-            <Text
-              style={styles.view}
-              onPress={() => setSeeComment(!seeComment)}>
-              View All Comments ({comment.length}) ^
-            </Text>
+            <View style={Stack.row}>
+              <Text style={styles.view}>
+                View All Comments ({data?.comments?.length})
+              </Text>
+              <TouchableOpacity
+                style={{...styles.icon, ...Stack.center}}
+                onPress={() => setSeeComment(!seeComment)}>
+                <UpIcon up={!seeComment} />
+              </TouchableOpacity>
+            </View>
             <View style={styles.commentContainer}>
               {seeComment &&
-                comment.map((text, index) => {
+                data?.comments?.map((text, index) => {
                   return (
                     <Comment
                       data={text}
-                      DeleteComment={DeleteComment}
                       id={index}
                       key={index}
+                      DeleteComment={DeleteComment}
                     />
                   );
                 })}
@@ -207,6 +185,9 @@ const styles = StyleSheet.create({
   comments: {
     marginVertical: 20,
   },
+  arrowBtnText: {
+    fontSize: 40,
+  },
   tag: {
     marginRight: 10,
     padding: 4,
@@ -226,7 +207,13 @@ const styles = StyleSheet.create({
     color: '#072D4B',
     opacity: 0.3,
   },
-
+  icon: {
+    width: 23.94,
+    height: 23.94,
+    borderRadius: 13,
+    backgroundColor: '#2F9FF8',
+    marginLeft: 10,
+  },
   written: {
     alignItems: 'center',
     marginTop: 50,
@@ -258,7 +245,6 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     fontSize: 17,
     lineHeight: 28,
-    marginTop: 20,
   },
   footer: {
     marginVertical: 20,
@@ -272,6 +258,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   commentContainer: {
-    marginTop: 40,
+    marginTop: 10,
   },
 });

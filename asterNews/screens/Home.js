@@ -5,15 +5,17 @@ import {Footer} from '../layout';
 import {Stack} from '../styles/Stack';
 import {instance} from '../utils/axios';
 import LottieView from 'lottie-react-native';
+import {FlatList} from 'react-native-gesture-handler';
+import ItemBox from '../components/DelelteSwipe';
 
 const Separator = () => <View style={styles.separator} />;
 
 export const Home = () => {
   const [data, setData] = useState();
+
   useEffect(() => {
     const getData = async () => {
-      const res = await instance.get('/');
-      console.log(res);
+      const res = await instance.get('/post');
       setData(res.data.message);
     };
     getData();
@@ -32,9 +34,14 @@ export const Home = () => {
         {data ? (
           <View>
             <View>
-              {data?.map((dataDetail, index) => {
-                return <Post data={dataDetail} key={index} />;
-              })}
+              <FlatList
+                pagingEnabled
+                vertical
+                data={data}
+                renderItem={({item, index}) => {
+                  return <Post data={item} key={index} />;
+                }}
+              />
             </View>
             <Subscribe />
             <Separator />
@@ -76,7 +83,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 23,
     color: '#072D4B',
-    marginHorizontal: 15,
     marginTop: 20,
   },
 });

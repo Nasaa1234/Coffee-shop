@@ -12,7 +12,7 @@ const PostSchema = new Schema(
     description: {
       type: String,
     },
-    image: {type: String},
+    image: {type: Array},
     body: {
       type: String,
       required: [true, 'Заавал бөглөнө үү'],
@@ -22,9 +22,9 @@ const PostSchema = new Schema(
     published_at: Date,
     comments: [
       {
-        written_by: String,
-        image: String,
+        posted_on: String,
         text: String,
+        user: String,
       },
     ],
   },

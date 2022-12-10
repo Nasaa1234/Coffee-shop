@@ -38,18 +38,13 @@ global.onlineUsers = new Map();
 io.on("connection", (socket) => {
   global.chatSocket = socket;
   socket.on("add-user", (userId) => {
-    console.log(userId);
     onlineUsers.set(userId, socket.id);
   });
 
   socket.on("send-msg", (data) => {
-    console.log("onlineUsers: ", onlineUsers);
     const sendUserSocket = onlineUsers.get(data.to);
-    console.log(sendUserSocket);
-    console.log("data:", data);
 
     if (sendUserSocket) {
-      console.log("data next", data.value, sendUserSocket);
       socket.to(sendUserSocket).emit("msg-recieve", data.value);
     }
   });
