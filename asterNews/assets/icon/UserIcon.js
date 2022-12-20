@@ -12,7 +12,7 @@ export const UserIcon = props => {
       {...props}>
       <Path
         d="M15 15.75v-1.5a3 3 0 00-3-3H6a3 3 0 00-3 3v1.5M9 8.25a3 3 0 100-6 3 3 0 000 6z"
-        stroke="#072D4B"
+        stroke={props.stroke || 'gray'}
         strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"

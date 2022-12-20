@@ -9,6 +9,9 @@ const PostSchema = new Schema(
       minLen: 5,
       required: [true, 'Заавал бөглөнө үү'],
     },
+    like: {
+      type: Number,
+    },
     description: {
       type: String,
     },
@@ -18,7 +21,6 @@ const PostSchema = new Schema(
       required: [true, 'Заавал бөглөнө үү'],
     },
 
-    create_at: Date,
     published_at: Date,
     comments: [
       {

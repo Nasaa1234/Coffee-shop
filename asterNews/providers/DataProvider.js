@@ -1,50 +1,30 @@
 /* eslint-disable react/react-in-jsx-scope */
-import {NavigationContainer} from '@react-navigation/native';
 import {createContext, useContext, useState, useEffect} from 'react';
 import {instance} from '../utils/axios';
 
 const DataContext = createContext({});
 
 export const DataProvider = ({children}) => {
-  'CHIULD: ', children);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
   const [succes, setSucces] = useState({
     create: '',
     update: '',
     delete: '',
     comment: '',
     deleteComment: '',
-  });
-  const [error, setError] = useState({
-    create: '',
-    update: ' ',
-    delete: '',
+    addPost: '',
   });
 
   useEffect(() => {
-    instance
-      .get('/posts')
-      .then(el => {
-        setData(el.data);
-      })
-      .catch(err => setError(err));
+    const getData = async () => {
+      const res = await instance.get('/post');
+      setData(res.data.message);
+    };
+    getData();
   }, [succes]);
 
-  const Create = (title, description, image, body) => {
-    instance
-      .post('/posts', {
-        title,
-        description,
-        image,
-        body,
-      })
-      .then(el => {
-        setSucces({...succes, create: el});
-      })
-      .catch(el => 'err', el));
-  };
-
   const AddComment = (text, id) => {
+    console.log(text);
     instance
       .put('/post/writeComment', {
         comments: text,
@@ -55,28 +35,36 @@ export const DataProvider = ({children}) => {
 
   const DeleteComment = (index, id) => {
     instance
-      .delete('/post/deleteComment', {
+      .put('/post/deleteComment', {
         commentId: index,
         postId: id,
       })
       .then(el => setSucces({...succes, deleteComment: el}));
   };
 
-  <NavigationContainer>
+  const AddPost = ({title, description, image, body}) => {
+    instance
+      .post('addPost', {
+        title,
+        description,
+        body,
+        image,
+      })
+      .then(el => setSucces({...succes, addPost: el}));
+  };
+
+  return (
     <DataContext.Provider
       value={{
-        data,
-        setData,
-        Create,
-        error,
-        succes,
         DeleteComment,
         AddComment,
+        data,
+        succes,
+        AddPost,
       }}>
       {children}
     </DataContext.Provider>
-    ;
-  </NavigationContainer>;
+  );
 };
 
 export const useData = () => useContext(DataContext);

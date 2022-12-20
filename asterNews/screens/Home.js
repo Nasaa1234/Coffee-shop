@@ -1,25 +1,16 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Post, Subscribe} from '../components';
 import {Footer} from '../layout';
 import {Stack} from '../styles/Stack';
-import {instance} from '../utils/axios';
 import LottieView from 'lottie-react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import ItemBox from '../components/DelelteSwipe';
+import {useData} from '../providers/DataProvider';
 
 const Separator = () => <View style={styles.separator} />;
 
 export const Home = () => {
-  const [data, setData] = useState();
-
-  useEffect(() => {
-    const getData = async () => {
-      const res = await instance.get('/post');
-      setData(res.data.message);
-    };
-    getData();
-  }, []);
+  const {data} = useData();
 
   const animationRef = useRef(null);
 

@@ -22,7 +22,7 @@ const ReplyComment = ({data}) => {
   );
 };
 
-export const Comment = ({data, DeleteComment, id}) => {
+export const Comment = ({data, DeleteComment, id, postId}) => {
   return (
     <View style={{marginVertical: 5}}>
       <View style={{...Stack.row, ...Stack.spaceBetween}}>
@@ -37,7 +37,7 @@ export const Comment = ({data, DeleteComment, id}) => {
         <Text style={styles.written}>Posted on {data.posted_on}</Text>
         <TouchableOpacity
           style={{...Stack.row, ...Stack.center}}
-          onPress={() => DeleteComment(id)}>
+          onPress={() => DeleteComment(id, postId)}>
           <DeleteIcon />
           <Text style={styles.delete}>Delete</Text>
         </TouchableOpacity>

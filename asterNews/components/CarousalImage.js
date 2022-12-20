@@ -21,9 +21,8 @@ export const CarousalImage = ({data}) => {
     },
     {
       toValue: 0,
-      duration: 1000,
       easing: Easing.linear,
-      useNativeDriver: false,
+      useNativeDriver: true,
     },
   );
 

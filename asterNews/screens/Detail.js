@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -9,24 +9,34 @@ import {
   View,
   ActivityIndicator,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {CarousalImage, Comment, Subscribe} from '../components';
+import {CarousalImage, Comment, Post, Subscribe} from '../components';
 import {Footer} from '../layout';
 import {Stack} from '../styles/Stack';
 import {instance} from '../utils/axios';
-import {UpIcon} from '../assets/icon';
-import {TapGestureHandler} from 'react-native-gesture-handler';
+import {LikeIcon, UpIcon} from '../assets/icon';
+import {
+  Gesture,
+  GestureDetector,
+  LongPressGestureHandler,
+  TapGestureHandler,
+} from 'react-native-gesture-handler';
+import {useData} from '../providers/DataProvider';
 
 export const Detail = ({route}) => {
   const navigation = useNavigation();
-  const [value, setValue] = useState();
-  const [data, setData] = useState();
+  const {AddComment, DeleteComment, succes, data} = useData();
+  const [value, setValue] = useState(null);
+  const [dataDetail, setData] = useState();
+  const [like, setLike] = useState(null);
+  const [morePost, setMore] = useState(null);
   const [seeComment, setSeeComment] = useState({
     add: false,
     delete: false,
   });
-  const [succes, setSucces] = useState();
+  const doubleTapRef = useRef();
   const {id, date} = route.params;
 
   useEffect(() => {
@@ -41,36 +51,44 @@ export const Detail = ({route}) => {
     setValue(e);
   };
 
-  const AddComment = text => {
-    instance
-      .put('/post/writeComment', {
-        comments: text,
-        postId: id,
-      })
-      .then(() => setSucces({...succes, add: !succes?.add}));
-  };
+  useEffect(() => {
+    const shuffled = [...data].sort(() => 0.5 - Math.random());
+    setMore(shuffled?.slice(0, 5));
+  }, [data]);
 
-  const DeleteComment = index => {
-    instance
-      .delete('/post/deleteComment', {
-        commentId: index,
-        postId: id,
-      })
-      .then(() => setSucces({...succes, delete: !succes?.delete}));
-  };
-
-  const MorePost = arr => {
-    const shuffled = [...arr].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 5);
-  };
+  const longPressGesture = Gesture.LongPress().onEnd((e, success) => {
+    if (success) {
+      Alert.alert(
+        'Alert Title',
+        'My Alert Msg',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => Alert.alert('Cancel Pressed'),
+            style: 'cancel',
+          },
+        ],
+        {
+          cancelable: true,
+          onDismiss: () =>
+            Alert.alert(
+              'This alert was dismissed by tapping outside of the alert dialog.',
+            ),
+        },
+      );
+    }
+  });
 
   return (
     <SafeAreaView style={styles.container}>
-      {data ? (
+      {dataDetail ? (
         <ScrollView>
-          <Text style={styles.title}>{data?.title}</Text>
+          <View style={[Stack.row, Stack.center, Stack.spaceBetween]}>
+            <Text style={styles.title}>{dataDetail?.title}</Text>
+            {like ? <LikeIcon stroke="red" fill="orange" /> : <LikeIcon />}
+          </View>
           <View style={Stack.row}>
-            {data?.tags?.map((name, index) => {
+            {dataDetail?.tags?.map((name, index) => {
               return (
                 <View style={styles.tag} key={index}>
                   <Text
@@ -83,13 +101,22 @@ export const Detail = ({route}) => {
               );
             })}
           </View>
+          <GestureDetector gesture={longPressGesture}>
+            <View style={styles.box}>
+              <Text>asdf</Text>
+            </View>
+          </GestureDetector>
           <TapGestureHandler
+            ref={doubleTapRef}
+            numberOfTaps={2}
             onActivated={() => {
-              console.log('Activated');
+              setLike(prev => !prev);
             }}>
-            <CarousalImage data={data} />
+            <View>
+              <CarousalImage data={dataDetail} />
+            </View>
           </TapGestureHandler>
-          <Text style={styles.body}>{data?.description}</Text>
+          <Text style={styles.body}>{dataDetail?.description}</Text>
           <View style={styles.written}>
             <Text style={styles.published}>Published {date}</Text>
             <Text>by Nasaa</Text>
@@ -113,7 +140,7 @@ export const Detail = ({route}) => {
             <TouchableOpacity style={styles.appButtonContainer}>
               <Text
                 style={styles.appButtonText}
-                onPress={() => AddComment(value)}>
+                onPress={() => AddComment(value, id)}>
                 Post Comment
               </Text>
             </TouchableOpacity>
@@ -121,7 +148,7 @@ export const Detail = ({route}) => {
           <View style={styles.comments}>
             <View style={Stack.row}>
               <Text style={styles.view}>
-                View All Comments ({data?.comments?.length})
+                View All Comments ({dataDetail?.comments?.length})
               </Text>
               <TouchableOpacity
                 style={{...styles.icon, ...Stack.center}}
@@ -131,10 +158,11 @@ export const Detail = ({route}) => {
             </View>
             <View style={styles.commentContainer}>
               {seeComment &&
-                data?.comments?.map((text, index) => {
+                dataDetail?.comments?.map((text, index) => {
                   return (
                     <Comment
                       data={text}
+                      postId={id}
                       id={index}
                       key={index}
                       DeleteComment={DeleteComment}
@@ -145,7 +173,12 @@ export const Detail = ({route}) => {
           </View>
           <Subscribe />
           <View>
-            <Text>More News for you</Text>
+            <Text style={{fontSize: 30, textAlign: 'center', marginTop: 10}}>
+              More News for you
+            </Text>
+            {morePost.map((post, index) => {
+              return <Post data={post} key={index} />;
+            })}
           </View>
           <View style={styles.footer}>
             <Footer />
