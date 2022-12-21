@@ -5,7 +5,6 @@ import {
   HomeIcon,
   LogoIcon,
   MenuIcon,
-  SaveIcon,
   SearchIcon,
   ShareIcon,
   UserIcon,
@@ -33,42 +32,6 @@ export const DrawerNavigation = () => {
       icon: <HomeIcon />,
       screen: DayAndNight,
       name: 'Day && Night animation',
-    },
-    {
-      screen: NotificationsScreen,
-      icon: <ShareIcon />,
-      name: 'Health',
-    },
-
-    {
-      icon: <SaveIcon />,
-      screen: NotificationsScreen,
-      name: 'Covid 19',
-    },
-    {
-      icon: <ShareIcon />,
-      screen: NotificationsScreen,
-      name: 'Entertainment',
-    },
-    {
-      screen: NotificationsScreen,
-      icon: <HomeIcon />,
-      name: 'Sports',
-    },
-    {
-      icon: <SaveIcon />,
-      screen: NotificationsScreen,
-      name: 'Discussion',
-    },
-    {
-      icon: <UserIcon />,
-      screen: NotificationsScreen,
-      name: 'Notification',
-    },
-    {
-      screen: NotificationsScreen,
-      icon: <ShareIcon />,
-      name: 'News Feed Settings',
     },
   ];
   return (

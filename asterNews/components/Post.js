@@ -12,6 +12,7 @@ import {
 import {Stack} from '../styles/Stack';
 import {SaveIcon, ShareIcon} from '../assets/icon';
 import {Swipeable} from 'react-native-gesture-handler';
+import {useData} from '../providers/DataProvider';
 
 const LeftSwipe = (progress, dragX) => {
   const scale = dragX.interpolate({
@@ -31,10 +32,28 @@ const LeftSwipe = (progress, dragX) => {
   );
 };
 
+const RightSwipe = (progress, dragX) => {
+  const scale = dragX.interpolate({
+    inputRange: [0, 100],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+  return (
+    <TouchableOpacity activeOpacity={0.6}>
+      <View style={styles.archiveBox}>
+        <Animated.Text
+          style={({transform: [{scale: scale}]}, {color: 'white'})}>
+          Archive
+        </Animated.Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 export const Post = ({data}) => {
   const navigation = useNavigation();
   const date = new Date(data?.published_at);
-
+  const {getPostId} = useData();
   const normalizedDate = new Date(
     date.getTime() - date.getTimezoneOffset() * -60000,
   );
@@ -46,13 +65,13 @@ export const Post = ({data}) => {
   });
 
   return (
-    <Swipeable renderLeftActions={LeftSwipe}>
+    <Swipeable renderLeftActions={LeftSwipe} renderRightActions={RightSwipe}>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('Detail', {
-            id: data?._id,
             date: formattedDate,
           });
+          getPostId(data?._id);
         }}>
         <View style={styles.container}>
           <View style={styles.body}>
@@ -141,5 +160,15 @@ const styles = StyleSheet.create({
     width: 100,
     height: 164,
     marginTop: 15,
+    borderRadius: 10,
+  },
+  archiveBox: {
+    backgroundColor: 'gray',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 100,
+    height: 164,
+    marginTop: 15,
+    borderRadius: 10,
   },
 });

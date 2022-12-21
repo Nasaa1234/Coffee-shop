@@ -9,7 +9,7 @@ import {
   View,
   ActivityIndicator,
   SafeAreaView,
-  Alert,
+  Pressable,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {CarousalImage, Comment, Post, Subscribe} from '../components';
@@ -17,17 +17,12 @@ import {Footer} from '../layout';
 import {Stack} from '../styles/Stack';
 import {instance} from '../utils/axios';
 import {LikeIcon, UpIcon} from '../assets/icon';
-import {
-  Gesture,
-  GestureDetector,
-  LongPressGestureHandler,
-  TapGestureHandler,
-} from 'react-native-gesture-handler';
+import {TapGestureHandler} from 'react-native-gesture-handler';
 import {useData} from '../providers/DataProvider';
 
 export const Detail = ({route}) => {
   const navigation = useNavigation();
-  const {AddComment, DeleteComment, succes, data} = useData();
+  const {AddComment, DeleteComment, succes, data, postId} = useData();
   const [value, setValue] = useState(null);
   const [dataDetail, setData] = useState();
   const [like, setLike] = useState(null);
@@ -37,15 +32,16 @@ export const Detail = ({route}) => {
     delete: false,
   });
   const doubleTapRef = useRef();
-  const {id, date} = route.params;
+  const {date} = route.params;
 
   useEffect(() => {
     const getPostDetail = async () => {
-      const res = await instance.get(`/post/${id}`);
+      console.log(postId);
+      const res = await instance.get(`/post/${postId}`);
       setData(res.data.message);
     };
     getPostDetail();
-  }, [id, succes]);
+  }, [postId, succes]);
 
   const getValue = e => {
     setValue(e);
@@ -56,36 +52,15 @@ export const Detail = ({route}) => {
     setMore(shuffled?.slice(0, 5));
   }, [data]);
 
-  const longPressGesture = Gesture.LongPress().onEnd((e, success) => {
-    if (success) {
-      Alert.alert(
-        'Alert Title',
-        'My Alert Msg',
-        [
-          {
-            text: 'Cancel',
-            onPress: () => Alert.alert('Cancel Pressed'),
-            style: 'cancel',
-          },
-        ],
-        {
-          cancelable: true,
-          onDismiss: () =>
-            Alert.alert(
-              'This alert was dismissed by tapping outside of the alert dialog.',
-            ),
-        },
-      );
-    }
-  });
-
   return (
     <SafeAreaView style={styles.container}>
       {dataDetail ? (
         <ScrollView>
           <View style={[Stack.row, Stack.center, Stack.spaceBetween]}>
             <Text style={styles.title}>{dataDetail?.title}</Text>
-            {like ? <LikeIcon stroke="red" fill="orange" /> : <LikeIcon />}
+            <Pressable onPress={() => setLike(true)}>
+              {like ? <LikeIcon stroke="red" fill="orange" /> : <LikeIcon />}
+            </Pressable>
           </View>
           <View style={Stack.row}>
             {dataDetail?.tags?.map((name, index) => {
@@ -101,11 +76,6 @@ export const Detail = ({route}) => {
               );
             })}
           </View>
-          <GestureDetector gesture={longPressGesture}>
-            <View style={styles.box}>
-              <Text>asdf</Text>
-            </View>
-          </GestureDetector>
           <TapGestureHandler
             ref={doubleTapRef}
             numberOfTaps={2}
@@ -140,7 +110,7 @@ export const Detail = ({route}) => {
             <TouchableOpacity style={styles.appButtonContainer}>
               <Text
                 style={styles.appButtonText}
-                onPress={() => AddComment(value, id)}>
+                onPress={() => AddComment(value, postId)}>
                 Post Comment
               </Text>
             </TouchableOpacity>
@@ -162,7 +132,7 @@ export const Detail = ({route}) => {
                   return (
                     <Comment
                       data={text}
-                      postId={id}
+                      postId={postId}
                       id={index}
                       key={index}
                       DeleteComment={DeleteComment}

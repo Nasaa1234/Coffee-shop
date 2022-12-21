@@ -1,10 +1,10 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {NotificationsScreen} from '../App';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AddPostScreen, Profile} from '../screens';
 import {DrawerNavigation} from './DrawerNavigation';
 import {AddIcon, HomeIcon, SearchIcon, UserIcon} from '../assets/icon';
+import {Search} from '../screens/Search';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,7 +28,7 @@ export const TabNavigation = () => {
       />
       <Tab.Screen
         name="Search"
-        component={NotificationsScreen}
+        component={Search}
         options={{
           tabBarIcon: ({color}) => <SearchIcon stroke={color} />,
         }}

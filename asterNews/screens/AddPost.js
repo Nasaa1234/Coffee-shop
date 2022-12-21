@@ -1,6 +1,15 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+  Button,
+  Dimensions,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import {useData} from '../providers/DataProvider';
+import {Stack} from '../styles/Stack';
 
 const Input = ({handleChange, values, type}) => {
   return (
@@ -17,6 +26,7 @@ const Input = ({handleChange, values, type}) => {
 };
 
 export const AddPostScreen = () => {
+  const width = Dimensions.get('window').width;
   const {AddPost} = useData();
   const [values, setValues] = useState({
     title: '',
@@ -28,20 +38,25 @@ export const AddPostScreen = () => {
   const handleChange = prop => event => {
     setValues({...values, [prop]: event});
   };
-  const labels = ['Title', 'Description', 'Image', 'Body'];
+  const labels = ['Title', 'Description', 'Body', 'Tags'];
 
   return (
     <View style={styles.container}>
-      {labels.map((el, index) => {
-        return (
-          <Input
-            handleChange={handleChange}
-            values={values}
-            type={el}
-            key={index}
-          />
-        );
-      })}
+      <View style={[styles.addPicture, {width: width / 1.06}, Stack.center]}>
+        <Text style={[{color: 'white', fontSize: 60}]}>+</Text>
+      </View>
+      <View style={{marginTop: 10}}>
+        {labels.map((el, index) => {
+          return (
+            <Input
+              handleChange={handleChange}
+              values={values}
+              type={el}
+              key={index}
+            />
+          );
+        })}
+      </View>
       <Button title="Add Post" onPress={AddPost(values)} />
     </View>
   );
@@ -54,15 +69,23 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderWidth: 0.2,
-    borderRadius: 5,
+    borderBottomWidth: 0.2,
+    borderColor: 'gray',
+    marginHorizontal: 10,
     padding: 10,
   },
   component: {
     marginBottom: 10,
   },
   label: {
-    marginLeft: 5,
+    marginLeft: 20,
     marginBottom: 5,
+    color: 'gray',
+    fontSize: 18,
+  },
+  addPicture: {
+    backgroundColor: '#b7a4e6',
+    height: 200,
+    borderRadius: 10,
   },
 });

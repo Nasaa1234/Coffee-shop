@@ -1,7 +1,7 @@
 const Post = require('../model/Posts');
 
 exports.getPosts = async (req, res) => {
-  const posts = await Post.find().lean();
+  const posts = await Post.find().exec();
   res.send({
     message: posts,
   });
@@ -9,7 +9,7 @@ exports.getPosts = async (req, res) => {
 
 exports.getPostById = async (req, res) => {
   const {postId} = req.params;
-  const posts = await Post.findById(postId).lean();
+  const posts = await Post.findById(postId).exec();
   res.status(200).send({
     message: posts,
   });
@@ -20,8 +20,6 @@ exports.writeComment = async (req, res) => {
   const posts = await Post.findById(postId).exec();
   let message;
   if (!posts) {
-    message = 'posts not found';
-  } else {
     posts.comments.push({
       posted_on: 'Jul 5, 2021 | 6:22 AM',
       text: comments,
@@ -40,8 +38,6 @@ exports.deleteComment = async (req, res) => {
   let posts = await Post.findById(postId).exec();
   let message;
   if (!posts) {
-    message = 'posts not found';
-  } else {
     posts.comments = posts.comments?.filter((_, id) => {
       return id !== commentId;
     });
@@ -78,13 +74,21 @@ exports.deletePost = async (req, res) => {
   const {postId} = req.params;
   const post = await Post.findOne(postId).exec();
   if (!post) {
-    res.status(400).send({
-      message: 'No post found',
-    });
-  } else {
     post.delete();
     res.status(200).send({
       message: 'Post deleted successfully',
+    });
+  }
+};
+
+exports.clickLike = async (req, res) => {
+  const {postId} = req.params;
+  const post = await Post.findOne(postId).exec();
+  if (post) {
+    post.like = post.like + 1;
+    post.save();
+    res.status(200).send({
+      message: 'successfully',
     });
   }
 };

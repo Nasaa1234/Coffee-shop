@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Post} from '../components';
+import {useData} from '../providers/DataProvider';
 import {Stack} from '../styles/Stack';
 import {instance} from '../utils/axios';
+import {Login} from './Login';
 
 const Description = ({number, title}) => {
   return (
@@ -17,11 +19,10 @@ const Description = ({number, title}) => {
   );
 };
 
-export const Profile = () => {
+const HaveUser = () => {
   const [data, setData] = useState();
   useEffect(() => {
     instance.get('/posts').then(el => {
-      console.log(el);
       setData(el.data);
     });
   });
@@ -69,6 +70,11 @@ export const Profile = () => {
       </View>
     </View>
   );
+};
+
+export const Profile = () => {
+  const {user} = useData();
+  return user ? <HaveUser /> : <Login />;
 };
 
 const styles = StyleSheet.create({

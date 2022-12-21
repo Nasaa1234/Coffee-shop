@@ -6,6 +6,8 @@ const DataContext = createContext({});
 
 export const DataProvider = ({children}) => {
   const [data, setData] = useState();
+  const [postId, setPostId] = useState(null);
+  const [user, setUser] = useState(false);
   const [succes, setSucces] = useState({
     create: '',
     update: '',
@@ -14,6 +16,10 @@ export const DataProvider = ({children}) => {
     deleteComment: '',
     addPost: '',
   });
+
+  const getPostId = id => {
+    setPostId(id);
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -24,7 +30,6 @@ export const DataProvider = ({children}) => {
   }, [succes]);
 
   const AddComment = (text, id) => {
-    console.log(text);
     instance
       .put('/post/writeComment', {
         comments: text,
@@ -61,6 +66,9 @@ export const DataProvider = ({children}) => {
         data,
         succes,
         AddPost,
+        postId,
+        user,
+        getPostId,
       }}>
       {children}
     </DataContext.Provider>
