@@ -5,10 +5,12 @@ import {AddPostScreen, Profile} from '../screens';
 import {DrawerNavigation} from './DrawerNavigation';
 import {AddIcon, HomeIcon, SearchIcon, UserIcon} from '../assets/icon';
 import {Search} from '../screens/Search';
+import {useData} from '../providers/DataProvider';
 
 const Tab = createBottomTabNavigator();
 
 export const TabNavigation = () => {
+  const {user} = useData();
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -41,10 +43,14 @@ export const TabNavigation = () => {
           headerRight: () => <View style={style.header} />,
           headerLeft: () => (
             <View style={style.profile}>
-              <Text style={style.profile.username}>Nasanbat</Text>
-              <View style={style.profile.postNumber}>
-                <Text style={{color: 'white'}}>9+</Text>
-              </View>
+              {user && (
+                <View>
+                  <Text style={style.profile.username}>Nasanbat</Text>
+                  <View style={style.profile.postNumber}>
+                    <Text style={{color: 'white'}}>9+</Text>
+                  </View>
+                </View>
+              )}
             </View>
           ),
           headerTitle: () => <View style={style.header} />,

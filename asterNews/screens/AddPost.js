@@ -3,13 +3,18 @@ import React, {useState} from 'react';
 import {
   Button,
   Dimensions,
+  Image,
+  Platform,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
+import {PERMISSIONS, request} from 'react-native-permissions';
 import {useData} from '../providers/DataProvider';
 import {Stack} from '../styles/Stack';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const Input = ({handleChange, values, type}) => {
   return (
@@ -28,6 +33,7 @@ const Input = ({handleChange, values, type}) => {
 export const AddPostScreen = () => {
   const width = Dimensions.get('window').width;
   const {AddPost} = useData();
+  const [photo, setPhoto] = useState(null);
   const [values, setValues] = useState({
     title: '',
     description: '',
@@ -40,11 +46,45 @@ export const AddPostScreen = () => {
   };
   const labels = ['Title', 'Description', 'Body', 'Tags'];
 
+  const handleChoosePhoto = () => {
+    let options = {
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    launchImageLibrary(options, response => {
+      setPhoto(response);
+    });
+  };
+
+  const requstPhotoLibrary = async () => {
+    try {
+      // await request(PERMISSIONS.IOS.PHOTO_LIBRARY).then(response => {
+      handleChoosePhoto();
+      // });
+      console.log('asdf');
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <View style={[styles.addPicture, {width: width / 1.06}, Stack.center]}>
-        <Text style={[{color: 'white', fontSize: 60}]}>+</Text>
-      </View>
+      {photo ? (
+        <>
+          <Image source={{uri: photo.uri}} style={{width: 300, height: 300}} />
+        </>
+      ) : (
+        <Pressable onPress={requstPhotoLibrary}>
+          <View
+            style={[styles.addPicture, {width: width / 1.06}, Stack.center]}>
+            <Text style={[{color: 'white', fontSize: 60}]}>+</Text>
+          </View>
+        </Pressable>
+      )}
+
       <View style={{marginTop: 10}}>
         {labels.map((el, index) => {
           return (

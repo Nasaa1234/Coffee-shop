@@ -21,6 +21,8 @@ export const DataProvider = ({children}) => {
     setPostId(id);
   };
 
+  // const DeletePost = postId => {};
+
   useEffect(() => {
     const getData = async () => {
       const res = await instance.get('/post');

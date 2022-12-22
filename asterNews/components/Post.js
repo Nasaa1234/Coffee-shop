@@ -43,7 +43,7 @@ const RightSwipe = (progress, dragX) => {
       <View style={styles.archiveBox}>
         <Animated.Text
           style={({transform: [{scale: scale}]}, {color: 'white'})}>
-          Archive
+          Dont see
         </Animated.Text>
       </View>
     </TouchableOpacity>

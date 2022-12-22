@@ -10,3 +10,15 @@ exports.getAllUsers = async (req, res) => {
     users: users,
   });
 };
+
+exports.login = async (req, res) => {
+  res.send('login');
+};
+
+exports.deleteUser = async (req, res) => {
+  res.send('login');
+};
+
+exports.updateUser = async (req, res) => {
+  res.send('update');
+};

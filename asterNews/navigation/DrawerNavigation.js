@@ -36,13 +36,10 @@ export const DrawerNavigation = () => {
   ];
   return (
     <Drawer.Navigator
-      initialRouteName="Day && Night animation"
+      initialRouteName="Top Stories"
       drawerContent={props => <CustomDrawer {...props} />}
       screenOptions={({navigation}) => ({
         drawerActiveBackgroundColor: 'rgba(47, 159, 248, 0.1)',
-        drawerLabelStyle: {
-          fontSize: 15,
-        },
         headerRight: () => (
           <View style={style.header}>
             <SearchIcon style={style.header.search} />
