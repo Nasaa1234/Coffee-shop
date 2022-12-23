@@ -11,10 +11,17 @@ import {
 } from '../assets/icon';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {StackNavigation} from './StackNavigation';
-import {NotificationsScreen} from '../App';
 import {DayAndNight} from '../screens';
 
 const Drawer = createDrawerNavigator();
+
+const LongTap = () => {
+  return (
+    <View>
+      <Text>LONGTAP</Text>
+    </View>
+  );
+};
 
 export const DrawerNavigation = () => {
   const Items = [
@@ -26,7 +33,7 @@ export const DrawerNavigation = () => {
     {
       icon: <ShareIcon />,
       name: 'Long Tap ',
-      screen: NotificationsScreen,
+      screen: LongTap,
     },
     {
       icon: <HomeIcon />,
