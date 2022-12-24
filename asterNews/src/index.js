@@ -1,14 +1,16 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {DataProvider} from './providers/DataProvider';
+import {DataProvider, AuthProvider} from './providers';
 import {TabNavigation} from './navigation';
 
 export const App = () => {
   return (
     <NavigationContainer>
-      <DataProvider>
-        <TabNavigation />
-      </DataProvider>
+      <AuthProvider>
+        <DataProvider>
+          <TabNavigation />
+        </DataProvider>
+      </AuthProvider>
     </NavigationContainer>
   );
 };

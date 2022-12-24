@@ -9,9 +9,11 @@ import {
   View,
 } from 'react-native';
 import {LogoIcon, MenuIcon, UserIcon} from '../assets/icon';
+import {UseAuth} from '../providers/AuthProvider';
 import {Stack} from '../styles/Stack';
 
 export const Login = () => {
+  const {Login} = UseAuth();
   return (
     <View style={[styles.container, Stack.center]}>
       <LogoIcon width={100} height={110} />

@@ -7,6 +7,7 @@ const DataContext = createContext({});
 export const DataProvider = ({children}) => {
   const [data, setData] = useState();
   const [postId, setPostId] = useState(null);
+  const [saved, setSaved] = useState(null);
   const [user, setUser] = useState(false);
   const [succes, setSucces] = useState({
     create: '',
@@ -21,7 +22,9 @@ export const DataProvider = ({children}) => {
     setPostId(id);
   };
 
-  // const DeletePost = postId => {};
+  const SavedPost = id => {
+    console.log(id);
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -71,6 +74,7 @@ export const DataProvider = ({children}) => {
         postId,
         user,
         getPostId,
+        SavedPost,
       }}>
       {children}
     </DataContext.Provider>

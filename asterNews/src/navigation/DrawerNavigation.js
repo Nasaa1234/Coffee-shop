@@ -5,13 +5,14 @@ import {
   HomeIcon,
   LogoIcon,
   MenuIcon,
+  SaveIcon,
   SearchIcon,
   ShareIcon,
   UserIcon,
 } from '../assets/icon';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {StackNavigation} from './StackNavigation';
-import {DayAndNight} from '../screens';
+import {DayAndNight, GoogleMap, SavedPosts} from '../screens';
 
 const Drawer = createDrawerNavigator();
 
@@ -34,6 +35,16 @@ export const DrawerNavigation = () => {
       icon: <ShareIcon />,
       name: 'Long Tap ',
       screen: LongTap,
+    },
+    {
+      icon: <SaveIcon />,
+      screen: SavedPosts,
+      name: 'Saved Post',
+    },
+    {
+      icon: <MenuIcon />,
+      screen: GoogleMap,
+      name: 'Google map',
     },
     {
       icon: <HomeIcon />,

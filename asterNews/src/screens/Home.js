@@ -1,29 +1,19 @@
-import React, {useEffect, useRef} from 'react';
+import React from 'react';
 import {
-  Alert,
-  Button,
+  FlatList,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import {Post, Subscribe} from '../components';
+import {Loading, Post, Subscribe} from '../components';
 import {Footer} from '../layout';
-import {Stack} from '../styles/Stack';
-import LottieView from 'lottie-react-native';
-import {FlatList} from 'react-native-gesture-handler';
 import {useData} from '../providers/DataProvider';
 
 export const Home = () => {
   const {data} = useData();
 
-  const animationRef = useRef(null);
-
-  useEffect(() => {
-    animationRef.current?.play();
-    animationRef.current?.play(30, 120);
-  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -46,14 +36,9 @@ export const Home = () => {
             <Footer />
           </View>
         ) : (
-          // eslint-disable-next-line react-native/no-inline-styles
-          <View style={{...Stack.center, height: 500}}>
-            <LottieView
-              ref={animationRef}
-              source={require('../animation/loading.json')}
-              autoPlay
-              loop={true}
-            />
+          <View>
+            <Text>Loading...</Text>
+            {/* <Loading /> */}
           </View>
         )}
       </ScrollView>

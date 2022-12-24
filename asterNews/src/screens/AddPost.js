@@ -60,12 +60,10 @@ export const AddPostScreen = () => {
 
   const requstPhotoLibrary = async () => {
     try {
-      // await request(PERMISSIONS.IOS.PHOTO_LIBRARY).then(response => {
-      handleChoosePhoto();
-      // });
-      console.log('asdf');
+      await request(PERMISSIONS.IOS.PHOTO_LIBRARY).then(response => {
+        handleChoosePhoto();
+      });
     } catch (error) {
-      console.log(error);
       throw error;
     }
   };
@@ -74,7 +72,10 @@ export const AddPostScreen = () => {
     <View style={styles.container}>
       {photo ? (
         <>
-          <Image source={{uri: photo.uri}} style={{width: 300, height: 300}} />
+          <Image
+            source={{uri: photo.assets[0].uri}}
+            style={{width: width / 1.06, height: 200, borderRadius: 10}}
+          />
         </>
       ) : (
         <Pressable onPress={requstPhotoLibrary}>
