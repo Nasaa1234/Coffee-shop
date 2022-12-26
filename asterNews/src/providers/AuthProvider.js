@@ -7,17 +7,19 @@ const AuthContext = createContext({});
 export const AuthProvider = ({children}) => {
   const [user, setUser] = useState(null);
 
-  const Login = (username, password) => {
+  const LoginWithPassword = (username, password) => {
     instance
       .post('Login', {
         username,
         password,
       })
-      .then(el => console.log('success', el));
+      .then(el => setUser(el.data.message));
   };
 
   return (
-    <AuthContext.Provider value={{Login}}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{LoginWithPassword, user}}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 

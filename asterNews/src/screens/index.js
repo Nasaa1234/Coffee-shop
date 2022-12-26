@@ -6,3 +6,4 @@ export * from './DayAndNight';
 export * from './Login';
 export * from './SavedPosts';
 export * from './GoogleMap';
+export * from './Firebase';

@@ -5,12 +5,12 @@ import {AddPostScreen, Profile} from '../screens';
 import {DrawerNavigation} from './DrawerNavigation';
 import {AddIcon, HomeIcon, SearchIcon, UserIcon} from '../assets/icon';
 import {Search} from '../screens/Search';
-import {useData} from '../providers/DataProvider';
+import {UseAuth} from '../providers';
 
 const Tab = createBottomTabNavigator();
 
 export const TabNavigation = () => {
-  const {user} = useData();
+  const {user} = UseAuth();
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -41,18 +41,15 @@ export const TabNavigation = () => {
         options={{
           tabBarIcon: ({color}) => <UserIcon stroke={color} />,
           headerRight: () => <View style={style.header} />,
-          headerLeft: () => (
-            <View style={style.profile}>
-              {user && (
-                <View>
-                  <Text style={style.profile.username}>Nasanbat</Text>
-                  <View style={style.profile.postNumber}>
-                    <Text style={{color: 'white'}}>9+</Text>
-                  </View>
-                </View>
-              )}
-            </View>
-          ),
+          headerLeft: () =>
+            user && (
+              <View style={style.profile}>
+                <Text style={style.profile.username}>{user.username}</Text>
+                {/* <View style={style.profile.postNumber}>
+                  <Text style={{color: 'white'}}>9+</Text>
+                </View> */}
+              </View>
+            ),
           headerTitle: () => <View style={style.header} />,
         }}
       />

@@ -4,7 +4,6 @@ import {
   Button,
   Dimensions,
   Image,
-  Platform,
   Pressable,
   StyleSheet,
   Text,

@@ -36,10 +36,7 @@ export const Home = () => {
             <Footer />
           </View>
         ) : (
-          <View>
-            <Text>Loading...</Text>
-            {/* <Loading /> */}
-          </View>
+          <Loading />
         )}
       </ScrollView>
     </SafeAreaView>

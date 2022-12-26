@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   Pressable,
@@ -13,7 +13,16 @@ import {UseAuth} from '../providers/AuthProvider';
 import {Stack} from '../styles/Stack';
 
 export const Login = () => {
-  const {Login} = UseAuth();
+  const {LoginWithPassword} = UseAuth();
+  const [value, setValue] = useState({
+    username: '',
+    password: '',
+  });
+
+  const handleChange = prop => event => {
+    setValue({...value, [prop]: event});
+  };
+
   return (
     <View style={[styles.container, Stack.center]}>
       <LogoIcon width={100} height={110} />
@@ -21,13 +30,25 @@ export const Login = () => {
       <Text style={styles.account}>Login into account</Text>
       <View style={[Stack.row, Stack.center, {marginTop: 20}]}>
         <UserIcon />
-        <TextInput style={styles.input} placeholder={'UserName'} />
+        <TextInput
+          style={styles.input}
+          placeholder={'UserName'}
+          value={value.username}
+          onChangeText={handleChange('username')}
+        />
       </View>
       <View style={[Stack.row, Stack.center]}>
         <MenuIcon />
-        <TextInput style={styles.input} placeholder={'Password'} />
+        <TextInput
+          style={styles.input}
+          placeholder={'Password'}
+          value={value.password}
+          onChangeText={handleChange('password')}
+        />
       </View>
-      <Pressable style={[styles.signin, Stack.center]}>
+      <Pressable
+        style={[styles.signin, Stack.center]}
+        onPress={() => LoginWithPassword(value.username, value.password)}>
         <Text style={styles.signin?.text}>Sign In</Text>
       </Pressable>
       <View style={[Stack.row, {marginTop: 50, marginBottom: 20}]}>

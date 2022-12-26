@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Post} from '../components';
-import {useData} from '../providers/DataProvider';
+import {UseAuth} from '../providers';
 import {Stack} from '../styles/Stack';
 import {instance} from '../utils/axios';
 import {Login} from './Login';
@@ -21,6 +21,7 @@ const Description = ({number, title}) => {
 
 const HaveUser = () => {
   const [data, setData] = useState();
+  const {user} = UseAuth();
   useEffect(() => {
     instance.get('/posts').then(el => {
       setData(el.data);
@@ -40,7 +41,7 @@ const HaveUser = () => {
         <View>
           <Image
             source={{
-              uri: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80',
+              uri: user.profilePicture,
             }}
             style={styles.profilePicture}
           />
@@ -52,8 +53,8 @@ const HaveUser = () => {
         </View>
       </View>
       <View>
-        <Text style={styles.username}>Nasanbat</Text>
-        <Text>La description de mon profil</Text>
+        <Text style={styles.username}>{user.username}</Text>
+        <Text>{user.Bio}</Text>
       </View>
       <View style={Stack.row}>
         <Pressable style={styles.editButton}>
@@ -63,17 +64,17 @@ const HaveUser = () => {
           <Text>Share profile</Text>
         </Pressable>
       </View>
-      <View>
+      {/* <View>
         {data?.map((el, index) => {
           return <Post data={el} key={index} />;
         })}
-      </View>
+      </View> */}
     </View>
   );
 };
 
 export const Profile = () => {
-  const {user} = useData();
+  const {user} = UseAuth();
   return user ? <HaveUser /> : <Login />;
 };
 

@@ -12,7 +12,7 @@ import {
 } from '../assets/icon';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {StackNavigation} from './StackNavigation';
-import {DayAndNight, GoogleMap, SavedPosts} from '../screens';
+import {DayAndNight, Firebase, GoogleMap, SavedPosts} from '../screens';
 
 const Drawer = createDrawerNavigator();
 
@@ -45,6 +45,11 @@ export const DrawerNavigation = () => {
       icon: <MenuIcon />,
       screen: GoogleMap,
       name: 'Google map',
+    },
+    {
+      icon: <SaveIcon />,
+      screen: Firebase,
+      name: 'Firebase',
     },
     {
       icon: <HomeIcon />,
