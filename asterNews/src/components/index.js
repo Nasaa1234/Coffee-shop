@@ -5,3 +5,4 @@ export * from './CustomDrawer';
 export * from './CarousalImage';
 export * from './Loading';
 export * from './WriteComment';
+export * from './SuccesModal';

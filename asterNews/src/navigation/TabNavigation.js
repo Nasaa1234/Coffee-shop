@@ -10,7 +10,7 @@ import {UseAuth} from '../providers';
 const Tab = createBottomTabNavigator();
 
 export const TabNavigation = () => {
-  const {user} = UseAuth();
+  const {user, modalVisible} = UseAuth();
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -38,20 +38,19 @@ export const TabNavigation = () => {
       <Tab.Screen
         name="Profile"
         component={Profile}
-        options={{
-          tabBarIcon: ({color}) => <UserIcon stroke={color} />,
-          headerRight: () => <View style={style.header} />,
-          headerLeft: () =>
-            user && (
+        options={
+          user &&
+          !modalVisible && {
+            tabBarIcon: ({color}) => <UserIcon stroke={color} />,
+            headerRight: () => <Text style={{marginRight: 10}}>LOGOUT</Text>,
+            headerLeft: () => (
               <View style={style.profile}>
                 <Text style={style.profile.username}>{user.username}</Text>
-                {/* <View style={style.profile.postNumber}>
-                  <Text style={{color: 'white'}}>9+</Text>
-                </View> */}
               </View>
             ),
-          headerTitle: () => <View style={style.header} />,
-        }}
+            headerTitle: () => <View style={style.header} />,
+          }
+        }
       />
     </Tab.Navigator>
   );

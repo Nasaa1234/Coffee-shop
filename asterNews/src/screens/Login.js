@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import {LogoIcon, MenuIcon, UserIcon} from '../assets/icon';
-import {UseAuth} from '../providers/AuthProvider';
+import {UseAuth} from '../providers';
 import {Stack} from '../styles/Stack';
 
 export const Login = () => {

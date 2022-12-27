@@ -1,17 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useRef} from 'react';
-import {
-  Animated,
-  Dimensions,
-  Easing,
-  FlatList,
-  ImageBackground,
-} from 'react-native';
+import {Animated, Easing, FlatList, ImageBackground} from 'react-native';
 import {Stack} from '../styles/Stack';
+import {width} from '../utils';
 
 export const CarousalImage = ({data}) => {
-  const width = Dimensions.get('window').width;
-
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const RotateData = scrollX.interpolate(

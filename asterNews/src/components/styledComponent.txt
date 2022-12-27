@@ -1,0 +1,10 @@
+styles component
+
+scrollView 
+safeAreaView
+Button
+Input 
+padding 
+margin
+border
+

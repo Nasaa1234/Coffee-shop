@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {FlatList, StyleSheet, TextInput, View} from 'react-native';
+import {FlatList, Image, StyleSheet, TextInput, View} from 'react-native';
 import {Post} from '../components';
 import {Footer} from '../layout';
 import {useData} from '../providers/DataProvider';
+import {width} from '../utils';
 
 export const Search = () => {
   const {data} = useData();
@@ -24,11 +25,23 @@ export const Search = () => {
       />
       <FlatList
         pagingEnabled
-        vertical
+        horizontal
         data={data}
-        renderItem={({item, index}) => {
+        renderItem={({item, _index}) => {
           if (item.title.includes(values.search)) {
-            return <Post data={item} key={index} />;
+            return (
+              <View>
+                <Image
+                  source={{
+                    uri: item.image[0],
+                  }}
+                  style={{
+                    height: width / 1.5,
+                    width: width / 1.5,
+                  }}
+                />
+              </View>
+            );
           }
         }}
       />
@@ -55,4 +68,5 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginBottom: 5,
   },
+  image: {},
 });

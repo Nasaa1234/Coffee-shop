@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import {Post} from '../components';
-import {UseAuth} from '../providers';
+import {Post, SuccesModal} from '../components';
+import {UseAuth, useData} from '../providers';
 import {Stack} from '../styles/Stack';
-import {instance} from '../utils/axios';
 import {Login} from './Login';
 
 const Description = ({number, title}) => {
@@ -20,13 +19,9 @@ const Description = ({number, title}) => {
 };
 
 const HaveUser = () => {
-  const [data, setData] = useState();
   const {user} = UseAuth();
-  useEffect(() => {
-    instance.get('/posts').then(el => {
-      setData(el.data);
-    });
-  });
+  const {data} = useData();
+
   return (
     <View style={styles.container}>
       <View
@@ -64,18 +59,26 @@ const HaveUser = () => {
           <Text>Share profile</Text>
         </Pressable>
       </View>
-      {/* <View>
+      <View>
         {data?.map((el, index) => {
           return <Post data={el} key={index} />;
         })}
-      </View> */}
+      </View>
     </View>
   );
 };
 
 export const Profile = () => {
-  const {user} = UseAuth();
-  return user ? <HaveUser /> : <Login />;
+  const {user, modalVisible} = UseAuth();
+  return user ? (
+    modalVisible ? (
+      <SuccesModal modalVisible={modalVisible} />
+    ) : (
+      <HaveUser />
+    )
+  ) : (
+    <Login />
+  );
 };
 
 const styles = StyleSheet.create({

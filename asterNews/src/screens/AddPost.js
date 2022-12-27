@@ -2,7 +2,6 @@
 import React, {useState} from 'react';
 import {
   Button,
-  Dimensions,
   Image,
   Pressable,
   StyleSheet,
@@ -14,6 +13,7 @@ import {PERMISSIONS, request} from 'react-native-permissions';
 import {useData} from '../providers/DataProvider';
 import {Stack} from '../styles/Stack';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {width} from '../utils';
 
 const Input = ({handleChange, values, type}) => {
   return (
@@ -30,7 +30,6 @@ const Input = ({handleChange, values, type}) => {
 };
 
 export const AddPostScreen = () => {
-  const width = Dimensions.get('window').width;
   const {AddPost} = useData();
   const [photo, setPhoto] = useState(null);
   const [values, setValues] = useState({
